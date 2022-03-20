@@ -3,6 +3,8 @@ package edu.school.cinema.config;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +27,17 @@ import java.util.Properties;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = { "edu.school.cinema" })
-@EnableTransactionManagement
+//@EnableTransactionManagement
 public class ApplicationContextConfig implements WebMvcConfigurer {
 
     private static Logger logger = LoggerFactory.logger(ApplicationContextConfig.class);
+    private final ApplicationContext applicationContext;
+
+    @Autowired
+    public ApplicationContextConfig(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        System.out.println("ApplicationContextConfig");
+    }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -39,9 +48,12 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
     public ViewResolver viewResolver() {
         InternalResourceViewResolver bean = new InternalResourceViewResolver();
 
+//        bean.setApplicationContext(applicationContext);
         bean.setViewClass(JstlView.class);
-        bean.setPrefix("/WEB-INF/view/");
+        bean.setPrefix("/WEB-INF/jsp/");
         bean.setSuffix(".jsp");
+
+        System.out.println("sdasdsadas");
 
         return bean;
     }
@@ -61,7 +73,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 //                    .build();
 
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+            dataSource.setUrl("jdbc:postgresql://localhost:5433/postgres");
             dataSource.setUsername("postgres");
             dataSource.setPassword("");
             dataSource.setDriverClassName("org.postgresql.Driver");
@@ -94,7 +106,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
         hibernateProp.put("hibernate.connection.useUnicode", true);
 
 
-//        hibernateProp.put("hibernate.hbm2ddl.auto", "create");
+        hibernateProp.put("hibernate.hbm2ddl.auto", "create");
         return hibernateProp;
     }
 
@@ -108,9 +120,9 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
         return sessionFactoryBean.getObject();
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager() throws IOException {
-        return new HibernateTransactionManager(sessionFactory());
-    }
+//    @Bean
+//    public PlatformTransactionManager transactionManager() throws IOException {
+//        return new HibernateTransactionManager(sessionFactory());
+//    }
 
 }

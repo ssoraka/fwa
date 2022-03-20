@@ -4,16 +4,17 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-    <display-name>HelloSpringMVC</display-name>
+    <display-name>HelloMVC</display-name>
 
-    <servlet>
-        <servlet-name>MyServlet</servlet-name>
-        <servlet-class>edu.school.cinema.servlets.MyServlet</servlet-class>
-    </servlet>
+<!--    <servlet>-->
+<!--        <servlet-name>MyServlet</servlet-name>-->
+<!--        <servlet-class>edu.school.cinema.servlets.MyServlet</servlet-class>-->
+<!--        <load-on-startup>0</load-on-startup>-->
+<!--    </servlet>-->
 
-    <servlet-mapping>
-        <servlet-name>MyServlet</servlet-name>
-        <url-pattern>/edu.school.cinema.servlets.MyServlet</url-pattern>
-    </servlet-mapping>
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>MyServlet</servlet-name>-->
+<!--        <url-pattern>/users2</url-pattern>-->
+<!--    </servlet-mapping>-->
 
 </web-app>
