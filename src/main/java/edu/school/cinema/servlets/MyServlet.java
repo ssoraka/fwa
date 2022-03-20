@@ -1,3 +1,5 @@
+package edu.school.cinema.servlets;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +17,7 @@ public class MyServlet extends HttpServlet {
             writer.println("<!DOCTYPE html><html>");
             writer.println("<head>");
             writer.println("<meta charset=\"UTF-8\" />");
-            writer.println("<title>MyServlet.java:doGet(): Servlet code!</title>");
+            writer.println("<title>edu.school.cinema.servlets.MyServlet.java:doGet(): Servlet code!</title>");
             writer.println("</head>");
             writer.println("<body>");
 
@@ -34,7 +36,7 @@ public class MyServlet extends HttpServlet {
             writer.println("<!DOCTYPE html><html>");
             writer.println("<head>");
             writer.println("<meta charset=\"UTF-8\" />");
-            writer.println("<title>MyServlet.java:doPost(): Servlet code!</title>");
+            writer.println("<title>edu.school.cinema.servlets.MyServlet.java:doPost(): Servlet code!</title>");
             writer.println("</head>");
             writer.println("<body>");
 
