@@ -4,6 +4,7 @@ import edu.school.cinema.repositories.UserDao;
 import edu.school.cinema.repositories.UserDaoTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,11 +29,15 @@ public class MyServlet extends HttpServlet {
         counter = 0;
         dao = new UserDaoTest();
         System.out.println("init");
+
+        ServletContext servletContext = getServletContext();
+        int i = (Integer)servletContext.getAttribute("test");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
+
 
         try (PrintWriter writer = response.getWriter()) {
             writer.println("<!DOCTYPE html><html>");

@@ -30,7 +30,7 @@ import java.util.Properties;
 //@EnableTransactionManagement
 public class ApplicationContextConfig implements WebMvcConfigurer {
 
-    private static Logger logger = LoggerFactory.logger(ApplicationContextConfig.class);
+//    private static Logger logger = LoggerFactory.logger(ApplicationContextConfig.class);
     private final ApplicationContext applicationContext;
 
     //listener
@@ -62,7 +62,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 
 
 
-    @Bean
+//    @Bean
     public DataSource dataSource() {
         try {
 //            DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
@@ -74,7 +74,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 //                    .build();
 
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setUrl("jdbc:postgresql://localhost:5433/postgres");
+            dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
             dataSource.setUsername("postgres");
             dataSource.setPassword("");
             dataSource.setDriverClassName("org.postgresql.Driver");
@@ -87,7 +87,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 ////                    .addScripts("classpath:sql/schema.sql", "classpath:sql/test-data.sql")
 //                    .build();
         } catch (Exception e) {
-            logger.error("Embedded DataSource bean cannot be created!", e);
+//            logger.error("Embedded DataSource bean cannot be created!", e);
             return null;
         }
     }
@@ -111,7 +111,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
         return hibernateProp;
     }
 
-    @Bean
+//    @Bean
     public SessionFactory sessionFactory() throws IOException {
         LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource());
