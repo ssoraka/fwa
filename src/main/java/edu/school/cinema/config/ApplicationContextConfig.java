@@ -1,5 +1,7 @@
 package edu.school.cinema.config;
 
+import edu.school.cinema.repositories.UserDao;
+import edu.school.cinema.repositories.UserDaoTest;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
@@ -24,32 +28,25 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
 
-@EnableWebMvc
+//@EnableWebMvc //для запуска addViewControllers
 @Configuration
 @ComponentScan(basePackages = { "edu.school.cinema" })
 //@EnableTransactionManagement
 public class ApplicationContextConfig implements WebMvcConfigurer {
 
 //    private static Logger logger = LoggerFactory.logger(ApplicationContextConfig.class);
-    private final ApplicationContext applicationContext;
 
-    //listener
-    @Autowired
-    public ApplicationContextConfig(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-        System.out.println("ApplicationContextConfig");
-    }
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/").setViewName("index");
+//    }
 
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver bean = new InternalResourceViewResolver();
 
 //        bean.setApplicationContext(applicationContext);
+        //эта херота нужна для построения урла из названия файла
         bean.setViewClass(JstlView.class);
         bean.setPrefix("/WEB-INF/jsp/");
         bean.setSuffix(".jsp");
@@ -60,13 +57,21 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
     }
 
 
+    @Bean
+    public UserDao userDao() {
+        return new UserDaoTest();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
 //    @Bean
     public DataSource dataSource() {
         try {
-//            DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-//            return dataSourceBuilder
+//            return DataSourceBuilder.create()
 //                    .url("jdbc:postgresql://localhost:5432/postgres")
 //                    .driverClassName("org.postgresql.Driver")
 //                    .username("postgres")
@@ -80,9 +85,8 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
             dataSource.setDriverClassName("org.postgresql.Driver");
             return dataSource;
 
-//            DataSourceBuilder dsb = DataSourceBuilder.create();
-//            EmbeddedDatabaseBuilder dbBuilder = new EmbeddedDatabaseBuilder();
-//            return dbBuilder
+
+//            return new EmbeddedDatabaseBuilder()
 //                    .setType(EmbeddedDatabaseType.HSQL)
 ////                    .addScripts("classpath:sql/schema.sql", "classpath:sql/test-data.sql")
 //                    .build();

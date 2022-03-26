@@ -2,7 +2,7 @@ package edu.school.cinema.servlets;
 
 import edu.school.cinema.repositories.UserDao;
 import edu.school.cinema.repositories.UserDaoTest;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,22 +16,19 @@ import java.io.PrintWriter;
 @WebServlet("/users")
 public class MyServlet extends HttpServlet {
 
-    int counter = -1;
+    int counter;
 
     UserDao dao;
-    @Autowired
-    UserDao dao1;
-
 
     @Override
     public void init() throws ServletException {
         super.init();
-        counter = 0;
-        dao = new UserDaoTest();
-        System.out.println("init");
 
         ServletContext servletContext = getServletContext();
-        int i = (Integer)servletContext.getAttribute("test");
+        ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
+        dao = springContext.getBean(UserDao.class);
+
+        System.out.println("init");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,7 +44,7 @@ public class MyServlet extends HttpServlet {
             writer.println("</head>");
             writer.println("<body>");
 
-            writer.println("<h1>This is a simple java servlet get " + dao1 + ".</h1>");
+            writer.println("<h1>This is a simple java servlet get " + dao.getAllUsers().size() + ".</h1>");
 
             writer.println("</body>");
             writer.println("</html>");
@@ -59,6 +56,8 @@ public class MyServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
+
+
 
         try (PrintWriter writer = response.getWriter()) {
             writer.println("<!DOCTYPE html><html>");
