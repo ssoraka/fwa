@@ -12,11 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Objects;
 
-@WebServlet("/signUp")
-public class SignUpServlet extends HttpServlet {
+@WebServlet("/signIn")
+public class SignInServlet extends HttpServlet {
 
     UserDao dao;
     PasswordEncoder encoder;
@@ -37,7 +35,7 @@ public class SignUpServlet extends HttpServlet {
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
 
-        request.getRequestDispatcher("/WEB-INF/html/singUp.html").forward(request,response);
+        request.getRequestDispatcher("/WEB-INF/html/signIn.html").forward(request,response);
         System.out.println("get");
     }
 
@@ -45,11 +43,10 @@ public class SignUpServlet extends HttpServlet {
         User user = new User();
         user.setFirstName(request.getParameter("firstName"));
         user.setLastName(request.getParameter("lastName"));
-        user.setPhoneNumber(request.getParameter("phoneNumber"));
         user.setPassword(encoder.encode(request.getParameter("password")));
 
         try {
-            user = dao.createUser(user);
+            user = dao.getUserByFirstNameLastNamePassword(user.getFirstName(), user.getLastName(), user.getPassword());
             request.setAttribute("id", user.getId());
             response.sendRedirect("/webProject_war/profile");
         } catch (Exception e) {

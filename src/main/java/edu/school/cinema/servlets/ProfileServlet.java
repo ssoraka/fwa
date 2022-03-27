@@ -13,13 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
 
-@WebServlet("/signUp")
-public class SignUpServlet extends HttpServlet {
+@WebServlet("/profile")
+public class ProfileServlet extends HttpServlet {
 
     UserDao dao;
-    PasswordEncoder encoder;
 
     @Override
     public void init() throws ServletException {
@@ -28,7 +26,6 @@ public class SignUpServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
         dao = springContext.getBean(UserDao.class);
-        encoder = springContext.getBean(PasswordEncoder.class);
 
         System.out.println("init");
     }
@@ -37,23 +34,26 @@ public class SignUpServlet extends HttpServlet {
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
 
-        request.getRequestDispatcher("/WEB-INF/html/singUp.html").forward(request,response);
-        System.out.println("get");
-    }
+        User user = dao.getUserById((Long)request.getAttribute("id"));
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = new User();
-        user.setFirstName(request.getParameter("firstName"));
-        user.setLastName(request.getParameter("lastName"));
-        user.setPhoneNumber(request.getParameter("phoneNumber"));
-        user.setPassword(encoder.encode(request.getParameter("password")));
+        try (PrintWriter writer = response.getWriter()) {
+            writer.println("<!DOCTYPE html><html>");
+            writer.println("<head>");
+            writer.println("<meta charset=\"UTF-8\" />");
+            writer.println("<title>Profile</title>");
+            writer.println("</head>");
+            writer.println("<body>");
 
-        try {
-            user = dao.createUser(user);
-            request.setAttribute("id", user.getId());
-            response.sendRedirect("/webProject_war/profile");
-        } catch (Exception e) {
-            response.sendError(403);
+            writer.println("<h1>firstname " + request.getParameter("firstName") + ".</h1>");
+            writer.println("<h1>lastname " + request.getParameter("lastName") + ".</h1>");
+            if (!request.getParameter("phoneNumber").isEmpty()) {
+                writer.println("<h1>phone number " + request.getParameter("phoneNumber") + ".</h1>");
+            }
+
+            writer.println("</body>");
+            writer.println("</html>");
         }
+
+        System.out.println("get");
     }
 }

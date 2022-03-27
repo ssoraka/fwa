@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl /*implements UserDao*/ {
     private final String SQL_FIND_PERSON = "select * from users where id = ?";
     private final String SQL_DELETE_PERSON = "delete from users where id = ?";
     private final String SQL_UPDATE_PERSON = "update users set first_name = ?, last_name = ?, phone_number  = ? where id = ?";
@@ -38,8 +38,9 @@ public class UserDaoImpl implements UserDao {
                 person.getId()) > 0;
     }
 
-    public boolean createUser(User person) {
-        return jdbcTemplate.update(SQL_INSERT_PERSON, person.getId(), person.getFirstName(), person.getLastName(),
-                person.getPhoneNumber()) > 0;
+    public User createUser(User person) { //todo
+        jdbcTemplate.update(SQL_INSERT_PERSON, person.getId(), person.getFirstName(), person.getLastName(),
+                person.getPhoneNumber());
+        return person;
     }
 }

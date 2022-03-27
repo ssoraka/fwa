@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface UserDao {
     User getUserById(Long id);
+    User getUserByFirstNameLastNamePassword(String firstName, String lastName, String password);
 
     List<User> getAllUsers();
 
@@ -13,5 +14,5 @@ public interface UserDao {
 
     boolean updateUser(User user);
 
-    boolean createUser(User user);
+    User createUser(User user);
 }

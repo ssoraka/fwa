@@ -1,16 +1,11 @@
 package edu.school.cinema.listeners;
 
 import edu.school.cinema.config.ApplicationContextConfig;
-import edu.school.cinema.repositories.UserDaoTest;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.WebListener;
 
 @WebListener

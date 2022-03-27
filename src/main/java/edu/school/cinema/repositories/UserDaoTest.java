@@ -39,8 +39,17 @@ public class UserDaoTest implements UserDao {
     }
 
     @Override
-    public boolean createUser(User user) {
+    public User createUser(User user) {
         users.add(user);
-        return true;
+        user.setId((long)users.size());
+        return user;
+    }
+
+    @Override
+    public User getUserByFirstNameLastNamePassword(String firstName, String lastName, String password) {
+        return users.stream()
+                .filter(u -> u.getFirstName().equals(firstName) && u.getLastName().equals(lastName) && u.getPassword().equals(password))
+                .findFirst()
+                .orElse(null);
     }
 }
