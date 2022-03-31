@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/signIn", "/signUp"})
+//@WebFilter(urlPatterns = {"/signIn", "/signUp"})
 public class MyFilter implements Filter {
     PasswordEncoder encoder;
     UserDao dao;

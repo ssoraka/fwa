@@ -1,6 +1,7 @@
 package edu.school.cinema.config;
 
 import edu.school.cinema.repositories.UserDao;
+import edu.school.cinema.repositories.UserDaoImpl;
 import edu.school.cinema.repositories.UserDaoTest;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
@@ -59,7 +60,12 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 
     @Bean
     public UserDao userDao() {
-        return new UserDaoTest();
+        try {
+            return new UserDaoImpl(dataSource());
+        } catch (Exception e) {
+            System.out.println("!!!!что-то пошло не так с бд!!!!");
+            return new UserDaoTest();
+        }
     }
 
     @Bean
@@ -70,7 +76,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 
 //    @Bean
     public DataSource dataSource() {
-        try {
+//        try {
 //            return DataSourceBuilder.create()
 //                    .url("jdbc:postgresql://localhost:5432/postgres")
 //                    .driverClassName("org.postgresql.Driver")
@@ -90,10 +96,10 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 //                    .setType(EmbeddedDatabaseType.HSQL)
 ////                    .addScripts("classpath:sql/schema.sql", "classpath:sql/test-data.sql")
 //                    .build();
-        } catch (Exception e) {
-//            logger.error("Embedded DataSource bean cannot be created!", e);
-            return null;
-        }
+//        } catch (Exception e) {
+////            logger.error("Embedded DataSource bean cannot be created!", e);
+//            return null;
+//        }
     }
 
     private Properties hibernateProperties() {
@@ -111,7 +117,7 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
         hibernateProp.put("hibernate.connection.useUnicode", true);
 
 
-        hibernateProp.put("hibernate.hbm2ddl.auto", "create");
+        hibernateProp.put("hibernate.hbm2ddl.auto", "create-drop");
         return hibernateProp;
     }
 
@@ -125,9 +131,9 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
         return sessionFactoryBean.getObject();
     }
 
-//    @Bean
-//    public PlatformTransactionManager transactionManager() throws IOException {
-//        return new HibernateTransactionManager(sessionFactory());
-//    }
+    @Bean
+    public PlatformTransactionManager transactionManager() throws IOException {
+        return new HibernateTransactionManager(sessionFactory());
+    }
 
 }

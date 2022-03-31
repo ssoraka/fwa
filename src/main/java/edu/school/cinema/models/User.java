@@ -2,23 +2,23 @@ package edu.school.cinema.models;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name="User")
 @Table(name="users")
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column
+    @Column(name = "password")
     private String password;
 
     public Long getId() {
