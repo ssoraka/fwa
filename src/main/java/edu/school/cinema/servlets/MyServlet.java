@@ -1,7 +1,6 @@
 package edu.school.cinema.servlets;
 
 import edu.school.cinema.repositories.UserDao;
-import edu.school.cinema.repositories.UserDaoTest;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletContext;

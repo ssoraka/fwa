@@ -13,7 +13,7 @@ public class AppContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        final ServletContext servletContext = sce.getServletContext();
+        ServletContext servletContext = sce.getServletContext();
 
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
         ctx.register(ApplicationContextConfig.class);

@@ -14,7 +14,7 @@ public class UserDaoImpl implements UserDao {
     private final String SQL_UPDATE_PERSON = "update users set first_name = ?, last_name = ?, phone_number = ? where id = ?";
     private final String SQL_GET_ALL = "select * from users";
 
-    private final String SQL_INSERT_PERSON = "insert into users(first_name, last_name, phone_number, password) values(?,?,?,?)";
+    private final String SQL_INSERT_PERSON = "insert into users(first_name, last_name, phone_number, password) values(?,?,?,?) returning id";
     private final String SQL_FIND_BY_FIRSTNAME_LASTNAME_PASSWORD = "select * from users where first_name = ? and last_name = ? and password = ? ";
 
     private JdbcTemplate jdbcTemplate;
@@ -43,8 +43,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     public User createUser(User person) {
-        jdbcTemplate.update(SQL_INSERT_PERSON, person.getFirstName(), person.getLastName(), person.getPhoneNumber(), person.getPassword());
-        return getUserByFirstNameLastNamePassword(person.getFirstName(), person.getLastName(), person.getPassword());
+        Long id = jdbcTemplate.queryForObject(SQL_INSERT_PERSON, Long.class, person.getFirstName(), person.getLastName(), person.getPhoneNumber(), person.getPassword());
+        person.setId(id);
+        return person;
     }
 
     @Override
