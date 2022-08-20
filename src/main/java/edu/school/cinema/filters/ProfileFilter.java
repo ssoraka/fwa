@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@WebFilter(urlPatterns = {"/profile"})
+@WebFilter(urlPatterns = {"/profile/*"})
 public class ProfileFilter implements Filter {
 
     @Override
@@ -20,7 +20,7 @@ public class ProfileFilter implements Filter {
         HttpServletRequest rq = (HttpServletRequest)request;
         HttpServletResponse rs = (HttpServletResponse)response;
 
-        if (request.getAttribute("id") == null || !(request.getAttribute("id") instanceof Long)) {
+        if (!rq.getRequestURI().matches("/profile/\\d")) {
             rs.sendError(403);
         } else {
             chain.doFilter(request, response);

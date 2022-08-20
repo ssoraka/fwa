@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/profile")
+@WebServlet("/profile/*")
 public class ProfileServlet extends HttpServlet {
 
     UserDao dao;
@@ -34,7 +34,8 @@ public class ProfileServlet extends HttpServlet {
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
 
-        User user = dao.getUserById((Long)request.getAttribute("id"));
+        Long id = Long.parseLong(request.getRequestURI().substring("/profile/".length()));
+        User user = dao.getUserById(id);
 
         try (PrintWriter writer = response.getWriter()) {
             writer.println("<!DOCTYPE html><html>");
@@ -44,10 +45,10 @@ public class ProfileServlet extends HttpServlet {
             writer.println("</head>");
             writer.println("<body>");
 
-            writer.println("<h1>firstname " + request.getParameter("firstName") + ".</h1>");
-            writer.println("<h1>lastname " + request.getParameter("lastName") + ".</h1>");
-            if (!request.getParameter("phoneNumber").isEmpty()) {
-                writer.println("<h1>phone number " + request.getParameter("phoneNumber") + ".</h1>");
+            writer.println("<h1>firstname " + user.getFirstName() + ".</h1>");
+            writer.println("<h1>lastname " + user.getLastName()  + ".</h1>");
+            if (user.getPhoneNumber() != null) {
+                writer.println("<h1>phone number " + user.getPhoneNumber() + ".</h1>");
             }
 
             writer.println("</body>");

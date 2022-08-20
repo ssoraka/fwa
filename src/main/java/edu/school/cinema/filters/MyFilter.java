@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@WebFilter(urlPatterns = {"/signIn", "/signUp"})
+@WebFilter(urlPatterns = {"/signIn", "/signUp"})
 public class MyFilter implements Filter {
     PasswordEncoder encoder;
     UserDao dao;
@@ -36,12 +36,6 @@ public class MyFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-
-        User user = new User();
-        user.setFirstName(request.getParameter("firstName"));
-        user.setLastName(request.getParameter("lastName"));
-        user.setPhoneNumber(request.getParameter("phoneNumber"));
-        user.setPassword(encoder.encode(request.getParameter("password")));
 
         if (request.getParameter("firstName").isEmpty()
                 || request.getParameter("lastName").isEmpty()

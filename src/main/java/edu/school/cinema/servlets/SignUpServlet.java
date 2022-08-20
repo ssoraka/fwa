@@ -51,7 +51,8 @@ public class SignUpServlet extends HttpServlet {
         try {
             user = dao.createUser(user);
 //            request.setAttribute("id", user.getId());
-//            response.sendRedirect("/webProject_war/profile");
+//            response.setStatus(201);
+            response.sendRedirect("/profile/" + user.getId());
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(403);

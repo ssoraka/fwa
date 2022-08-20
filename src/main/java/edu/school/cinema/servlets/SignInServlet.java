@@ -48,7 +48,7 @@ public class SignInServlet extends HttpServlet {
         try {
             user = dao.getUserByFirstNameLastNamePassword(user.getFirstName(), user.getLastName(), user.getPassword());
             request.setAttribute("id", user.getId());
-            response.sendRedirect("/webProject_war/profile");
+            response.sendRedirect("/profile/" + user.getId());
         } catch (Exception e) {
             response.sendError(403);
         }
