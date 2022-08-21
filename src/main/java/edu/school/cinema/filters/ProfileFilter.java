@@ -1,10 +1,5 @@
 package edu.school.cinema.filters;
 
-import edu.school.cinema.models.User;
-import edu.school.cinema.repositories.UserDao;
-import org.springframework.context.ApplicationContext;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;

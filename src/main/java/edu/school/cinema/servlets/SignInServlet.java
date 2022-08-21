@@ -40,17 +40,21 @@ public class SignInServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = new User();
-        user.setFirstName(request.getParameter("firstName"));
-        user.setLastName(request.getParameter("lastName"));
-        user.setPassword(encoder.encode(request.getParameter("password")));
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String password = request.getParameter("password");
 
         try {
-            user = dao.getUserByFirstNameLastNamePassword(user.getFirstName(), user.getLastName(), user.getPassword());
-            request.setAttribute("id", user.getId());
-            response.sendRedirect("/profile/" + user.getId());
+            User user = dao.getUserByFirstNameLastNamePassword(firstName, lastName);
+            if (encoder.matches(password, user.getPassword())) {
+                response.sendRedirect("/profile/" + user.getId());
+            } else {
+                response.sendError(403);
+            }
         } catch (Exception e) {
             response.sendError(403);
         }
     }
 }
+//$2a$10$gmocb65ocMlENubErnP1V.Sy3VJLT7ZPnBXvJspfmqRoWIcMobN4u
+//$2a$10$3w5MBE0hAt5iDVDBY6cfnuu4Ii9yuIRmF5j/MDqp/WZvUKN5AL3ja
