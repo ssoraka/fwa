@@ -45,13 +45,14 @@ public class SignInServlet extends HttpServlet {
 
         try {
             User user = dao.getUserByPhoneNumber(phoneNumber);
+            request.getSession().setAttribute("user", user);
             if (encoder.matches(password, user.getPassword())) {
-                response.sendRedirect("/profile/" + user.getId());
+                response.sendRedirect("/profile");
             } else {
-                response.sendError(403);
+                response.sendRedirect("/");
             }
         } catch (Exception e) {
-            response.sendError(403);
+            response.sendRedirect("/");
         }
     }
 }

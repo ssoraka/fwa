@@ -19,7 +19,6 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
 
-//@EnableWebMvc //для запуска addViewControllers
 @Configuration
 @ComponentScan(basePackages = { "edu.school.cinema" })
 @PropertySource("../application.properties")
@@ -33,13 +32,6 @@ public class ApplicationContextConfig {
     private String userName;
     @Value("${datasoruce.password}")
     private String password;
-
-//    private static Logger logger = LoggerFactory.logger(ApplicationContextConfig.class);
-
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/").setViewName("index");
-//    }
 
     @Bean
     public UserDao userDao() {

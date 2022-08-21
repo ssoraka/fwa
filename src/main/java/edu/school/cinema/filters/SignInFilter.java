@@ -30,13 +30,17 @@ public class SignInFilter implements Filter {
         HttpServletRequest rq = (HttpServletRequest)request;
         HttpServletResponse rs = (HttpServletResponse)response;
 
+        if (rq.getSession().getAttribute("user") != null) {
+            rs.sendRedirect("/profile");
+            return;
+        }
+
         if (!rq.getMethod().equals("POST")){
             chain.doFilter(request, response);
             return;
         }
 
-        if (request.getParameter("phoneNumber").isEmpty()
-                || request.getParameter("password").isEmpty()) {
+        if (request.getParameter("phoneNumber").isEmpty() || request.getParameter("password").isEmpty()) {
             rs.sendRedirect(rq.getRequestURI());
         } else {
             chain.doFilter(request, response);

@@ -34,8 +34,13 @@ public class ProfileServlet extends HttpServlet {
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
 
-        Long id = Long.parseLong(request.getRequestURI().substring("/profile/".length()));
-        User user = dao.getUserById(id);
+        User user = null;
+        if (request.getRequestURI().equals("/profile")) {
+            user = (User) request.getSession().getAttribute("user");
+        } else {
+            Long id = Long.parseLong(request.getRequestURI().substring("/profile/".length()));
+            user = dao.getUserById(id);
+        }
 
         try (PrintWriter writer = response.getWriter()) {
             writer.println("<!DOCTYPE html><html>");
@@ -45,12 +50,10 @@ public class ProfileServlet extends HttpServlet {
             writer.println("</head>");
             writer.println("<body>");
 
-            writer.println("<h1>firstname " + user.getFirstName() + ".</h1>");
-            writer.println("<h1>lastname " + user.getLastName()  + ".</h1>");
-            if (user.getPhoneNumber() != null) {
-                writer.println("<h1>phone number " + user.getPhoneNumber() + ".</h1>");
-            }
-
+            writer.println("<h1>Profile</h1>");
+            writer.println("<h2>firstname " + user.getFirstName() + ".</h2>");
+            writer.println("<h2>lastname " + user.getLastName()  + ".</h2>");
+            writer.println("<h2>phone number " + user.getPhoneNumber() + ".</h2>");
             writer.println("<a href=\"/\">exit</a>");
             writer.println("</body>");
             writer.println("</html>");
