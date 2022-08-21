@@ -7,8 +7,13 @@
     <groupId>com.example</groupId>
     <artifactId>webProject</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>ex00</module>
+        <module>ex01</module>
+        <module>ex02</module>
+    </modules>
     <name>webProject</name>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -100,14 +105,4 @@
             <version>1.7.30</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.0</version>
-            </plugin>
-        </plugins>
-    </build>
 </project>
