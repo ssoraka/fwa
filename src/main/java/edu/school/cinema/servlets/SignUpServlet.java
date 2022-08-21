@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 
-@WebServlet("/signUp")
+@WebServlet(value = "/signUp", name = "SignUp", description = "Sing Up")
 public class SignUpServlet extends HttpServlet {
 
     UserDao dao;
@@ -50,8 +50,6 @@ public class SignUpServlet extends HttpServlet {
 
         try {
             user = dao.createUser(user);
-//            request.setAttribute("id", user.getId());
-//            response.setStatus(201);
             response.sendRedirect("/profile/" + user.getId());
         } catch (Exception e) {
             e.printStackTrace();

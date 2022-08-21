@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/users")
-public class MyServlet extends HttpServlet {
+public class UsersServlet extends HttpServlet {
 
     int counter;
 

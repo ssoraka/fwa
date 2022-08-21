@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/signIn")
+@WebServlet(value = "/signIn", name = "SignIn", description = "Sing In")
 public class SignInServlet extends HttpServlet {
 
     UserDao dao;
@@ -40,12 +40,11 @@ public class SignInServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
+        String phoneNumber = request.getParameter("phoneNumber");
         String password = request.getParameter("password");
 
         try {
-            User user = dao.getUserByFirstNameLastNamePassword(firstName, lastName);
+            User user = dao.getUserByPhoneNumber(phoneNumber);
             if (encoder.matches(password, user.getPassword())) {
                 response.sendRedirect("/profile/" + user.getId());
             } else {
@@ -56,5 +55,3 @@ public class SignInServlet extends HttpServlet {
         }
     }
 }
-//$2a$10$gmocb65ocMlENubErnP1V.Sy3VJLT7ZPnBXvJspfmqRoWIcMobN4u
-//$2a$10$3w5MBE0hAt5iDVDBY6cfnuu4Ii9yuIRmF5j/MDqp/WZvUKN5AL3ja

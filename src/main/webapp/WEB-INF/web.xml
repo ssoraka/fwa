@@ -8,7 +8,7 @@
 
 <!--    <servlet>-->
 <!--        <servlet-name>MyServlet</servlet-name>-->
-<!--        <servlet-class>edu.school.cinema.servlets.MyServlet</servlet-class>-->
+<!--        <servlet-class>edu.school.cinema.servlets.UsersServlet</servlet-class>-->
 <!--        <load-on-startup>0</load-on-startup>-->
 <!--    </servlet>-->
 

@@ -15,7 +15,7 @@ public class UserDaoImpl implements UserDao {
     private final String SQL_GET_ALL = "select * from users";
 
     private final String SQL_INSERT_PERSON = "insert into users(first_name, last_name, phone_number, password) values(?,?,?,?) returning id";
-    private final String SQL_FIND_BY_FIRSTNAME_LASTNAME_PASSWORD = "select * from users where first_name = ? and last_name = ? ";
+    private final String SQL_FIND_BY_PHONENUMBER = "select * from users where phone_number = ? ";
 
     private JdbcTemplate jdbcTemplate;
     private RowMapper<User> mapper = new UserMapper();
@@ -49,8 +49,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUserByFirstNameLastNamePassword(String firstName, String lastName) {
-        Object[] args = new Object[]{firstName, lastName};
-        return jdbcTemplate.query(SQL_FIND_BY_FIRSTNAME_LASTNAME_PASSWORD, args, mapper).get(0);
+    public User getUserByPhoneNumber(String phoneNumber) {
+        Object[] args = new Object[]{phoneNumber};
+        return jdbcTemplate.query(SQL_FIND_BY_PHONENUMBER, args, mapper).get(0);
     }
 }

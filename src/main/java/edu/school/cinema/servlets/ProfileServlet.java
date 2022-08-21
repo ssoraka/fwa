@@ -51,6 +51,7 @@ public class ProfileServlet extends HttpServlet {
                 writer.println("<h1>phone number " + user.getPhoneNumber() + ".</h1>");
             }
 
+            writer.println("<a href=\"/\">exit</a>");
             writer.println("</body>");
             writer.println("</html>");
         }
