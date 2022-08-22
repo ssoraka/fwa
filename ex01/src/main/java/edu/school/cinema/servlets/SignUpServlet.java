@@ -50,7 +50,8 @@ public class SignUpServlet extends HttpServlet {
 
         try {
             dao.createUser(user);
-            response.sendRedirect("/");
+            request.getSession().setAttribute("user", user);
+            response.sendRedirect("/profile");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

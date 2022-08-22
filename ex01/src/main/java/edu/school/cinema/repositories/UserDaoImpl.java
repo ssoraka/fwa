@@ -20,7 +20,6 @@ public class UserDaoImpl implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private RowMapper<User> mapper = new UserMapper();
 
-    @Autowired
     public UserDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
