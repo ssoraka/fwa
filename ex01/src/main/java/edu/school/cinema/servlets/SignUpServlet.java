@@ -29,8 +29,6 @@ public class SignUpServlet extends HttpServlet {
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
         dao = springContext.getBean(UserDao.class);
         encoder = springContext.getBean(PasswordEncoder.class);
-
-        System.out.println("init");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,7 +36,6 @@ public class SignUpServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         request.getRequestDispatcher("/WEB-INF/html/singUp.html").forward(request,response);
-        System.out.println("get");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

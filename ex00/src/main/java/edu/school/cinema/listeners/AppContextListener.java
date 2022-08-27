@@ -19,21 +19,9 @@ public class AppContextListener implements ServletContextListener {
         ctx.register(ApplicationContextConfig.class);
         ctx.refresh();
         servletContext.setAttribute("springContext", ctx);
-
-        System.out.println("contextInitialized");
-
-
-
-
-//        ServletRegistration.Dynamic appServlet =
-//                servletContext.addServlet("mvc", new DispatcherServlet(new GenericWebApplicationContext()));
-//        appServlet.setLoadOnStartup(1);
-//        appServlet.addMapping("/");
-
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("contextDestroyed");
     }
 }

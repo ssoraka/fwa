@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -32,7 +33,7 @@ public class ApplicationContextConfig {
     private String driverClassName;
     @Value("${datasource.url}")
     private String url;
-    @Value("${datasource.usrname}")
+    @Value("${datasource.username}")
     private String userName;
     @Value("${datasource.password}")
     private String password;
@@ -107,7 +108,18 @@ public class ApplicationContextConfig {
     }
 
     @Bean
-    public String pathToPic() {
-        return pathToPic;
+    public File pathToPic() {
+        File rootDir = new File(pathToPic);
+
+        if (!rootDir.exists()) {
+            if (!rootDir.mkdir()) throw new RuntimeException("Не получилось создать папку " + pathToPic);
+        }
+        if (!rootDir.isDirectory()) {
+            throw new RuntimeException("Не получилось создать папку " + pathToPic);
+        }
+        if (!rootDir.canWrite() || !rootDir.canRead()) {
+            throw new RuntimeException("Нет доступа к папке " + pathToPic);
+        }
+        return rootDir;
     }
 }

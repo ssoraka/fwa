@@ -26,8 +26,6 @@ public class ProfileServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
         dao = springContext.getBean(UserDao.class);
-
-        System.out.println("init");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,7 +56,5 @@ public class ProfileServlet extends HttpServlet {
             writer.println("</body>");
             writer.println("</html>");
         }
-
-        System.out.println("get");
     }
 }

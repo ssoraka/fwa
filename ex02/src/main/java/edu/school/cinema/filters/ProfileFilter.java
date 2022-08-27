@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/profile"})
+@WebFilter(urlPatterns = {"/profile", "/images/*", "/images", "/logout"})
 public class ProfileFilter implements Filter {
 
     @Override

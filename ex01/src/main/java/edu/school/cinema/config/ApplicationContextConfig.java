@@ -28,9 +28,9 @@ public class ApplicationContextConfig {
     private String driverClassName;
     @Value("${datasource.url}")
     private String url;
-    @Value("${datasource.usrname}")
+    @Value("${datasource.username}")
     private String userName;
-    @Value("${datasoruce.password}")
+    @Value("${datasource.password}")
     private String password;
 
     @Bean

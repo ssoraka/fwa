@@ -1,11 +1,9 @@
 package edu.school.cinema.servlets;
 
 import edu.school.cinema.models.User;
-import edu.school.cinema.repositories.UserDao;
 import edu.school.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,17 +11,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.util.Base64;
 
 @WebServlet("/profile")
 @MultipartConfig(
-        fileSizeThreshold = 1024 * 1024, // 1 MB
-        maxFileSize = 1024 * 1024 * 10,      // 10 MB
-        maxRequestSize = 1024 * 1024 * 100   // 100 MB
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 10,
+        maxRequestSize = 1024 * 1024 * 100
 )
 public class ProfileServlet extends HttpServlet {
 
-    private UserService userService;
     private File rootDir;
 
     @Override
@@ -32,21 +30,7 @@ public class ProfileServlet extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
-        userService = springContext.getBean(UserService.class);
-        String pathToPic = springContext.getBean(String.class);
-
-        rootDir = new File(pathToPic);
-        if (!rootDir.exists()) {
-            if (!rootDir.mkdir()) throw new RuntimeException("Не получилось создать папку " + pathToPic);
-        }
-        if (!rootDir.isDirectory()) {
-            throw new RuntimeException("Не получилось создать папку " + pathToPic);
-        }
-        if (!rootDir.canWrite() || !rootDir.canRead()) {
-            throw new RuntimeException("Нет доступа к папке " + pathToPic);
-        }
-
-        System.out.println("init");
+        rootDir = springContext.getBean(File.class);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,24 +38,36 @@ public class ProfileServlet extends HttpServlet {
         File dir = rootDir.toPath().resolve(user.getPhoneNumber()).toFile();
         dir.mkdir();
         request.getSession().setAttribute("pathImages", dir);
-        request.getRequestDispatcher("/WEB-INF/jsp/profile.jsp").forward(request, response);
 
-        System.out.println("get");
+        if (!dir.toPath().resolve("avatar.png").toFile().exists()) {
+            Files.copy(ProfileServlet.class.getResourceAsStream("/avatar.png"), dir.toPath().resolve("avatar.png"));
+        }
+        File avatar = dir.toPath().resolve("avatar.png").toFile();
+        byte[] fileContent = Files.readAllBytes( avatar.toPath() );
+        String encodedString = Base64.getEncoder().encodeToString(fileContent);
+        request.getSession().setAttribute("avatar", encodedString);
+
+        request.getRequestDispatcher("/WEB-INF/jsp/profile.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/jsp");
+    protected void doPost(HttpServletRequest req, HttpServletResponse rs) throws ServletException, IOException {
+        File pathToPic =  (File) req.getSession().getAttribute("pathImages");
+        if (!req.getPart("file").getSubmittedFileName().endsWith(".png")) {
+            rs.sendRedirect("/profile");
+            return;
+        }
 
-        File pathToPic =  (File)req.getSession().getAttribute("pathImages");
-        String filePath = pathToPic.toPath().resolve(req.getPart("file").getSubmittedFileName()).toFile().getAbsolutePath();
+        File file = pathToPic.toPath().resolve("avatar.png").toFile();
+        String filePath = file.getAbsolutePath();
+        file.delete();
 
         try{
             for (Part part : req.getParts()) {
                 part.write(filePath);
             }
         } catch (Exception ignored){}
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/profile.jsp");
-        dispatcher.forward(req, resp);
+
+        rs.sendRedirect("/profile");
     }
 }

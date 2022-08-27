@@ -24,9 +24,6 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user")
-    private List<FileName> fileNames = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<Authentication> authentications = new ArrayList<>();
 
     public Long getId() {
@@ -67,14 +64,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<FileName> getFileNames() {
-        return fileNames;
-    }
-
-    public void setFileNames(List<FileName> fileNames) {
-        this.fileNames = fileNames;
     }
 
     public List<Authentication> getAuthentications() {

@@ -37,8 +37,7 @@ public class SignUpFilter implements Filter {
 
         if (request.getParameter("firstName").isEmpty()
                 || request.getParameter("lastName").isEmpty()
-                || request.getParameter("phoneNumber").isEmpty()
-//                || !request.getParameter("phoneNumber").matches("\\d+")
+                || !request.getParameter("phoneNumber").matches("\\d+")
                 || request.getParameter("password").isEmpty()) {
             rs.sendRedirect(rq.getRequestURI());
         } else {

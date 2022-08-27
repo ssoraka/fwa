@@ -24,8 +24,6 @@ public class SignInServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
         userService = springContext.getBean(UserService.class);
-
-        System.out.println("init");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,7 +31,6 @@ public class SignInServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         request.getRequestDispatcher("/WEB-INF/html/signIn.html").forward(request,response);
-        System.out.println("get");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

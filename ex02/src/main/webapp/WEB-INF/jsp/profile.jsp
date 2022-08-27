@@ -2,9 +2,6 @@
 <%@ page import="java.io.File" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.nio.file.Files" %>
-<%@ page import="java.nio.file.Path" %>
-<%@ page import="java.util.stream.Stream" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="edu.school.cinema.models.Authentication" %>
 <%@ page import="edu.school.cinema.services.UserService" %>
 <%@ page import="edu.school.cinema.services.FileService" %>
@@ -18,6 +15,16 @@
 <% UserService userService = (UserService) request.getSession().getAttribute("userService");%>
 <% user = userService.getUserByPhoneNumber(user.getPhoneNumber());%>
 <% File pathToPic = (File) session.getAttribute("pathImages");%>
+
+<img src="data:image/png;base64,<%=request.getSession().getAttribute("avatar")%>" height="400" width="600">
+<form enctype="multipart/form-data" action="/profile" method="post">
+
+    <input type="file" name="file" size="100"/>
+    <input type="submit" value="Upload new avatar.png"/>
+    <br/>
+
+</form>
+
 <table width="50%" border="1">
     <thead>
     <tr>
@@ -40,7 +47,7 @@
     </tbody>
 </table>
 
-<form enctype="multipart/form-data" action="/profile" method="post">
+<form enctype="multipart/form-data" action="/images" method="post">
 
     <input type="file" name="file" size="100"/>
     <input type="submit" value="Upload new Pic"/>
@@ -79,7 +86,5 @@
 
 <br>
 <a href="/logout">logout</a>
-<br>
-<a><%pathToPic.getAbsolutePath(); %></a>
 </body>
 </html>
