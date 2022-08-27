@@ -2,22 +2,29 @@ package edu.school.cinema.servlets;
 
 import edu.school.cinema.models.User;
 import edu.school.cinema.repositories.UserDao;
+import edu.school.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/profile/*")
+@WebServlet("/profile")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 1 MB
+        maxFileSize = 1024 * 1024 * 10,      // 10 MB
+        maxRequestSize = 1024 * 1024 * 100   // 100 MB
+)
 public class ProfileServlet extends HttpServlet {
 
-    UserDao dao;
+    private UserService userService;
+    private File rootDir;
 
     @Override
     public void init() throws ServletException {
@@ -25,40 +32,46 @@ public class ProfileServlet extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
-        dao = springContext.getBean(UserDao.class);
+        userService = springContext.getBean(UserService.class);
+        String pathToPic = springContext.getBean(String.class);
+
+        rootDir = new File(pathToPic);
+        if (!rootDir.exists()) {
+            if (!rootDir.mkdir()) throw new RuntimeException("Не получилось создать папку " + pathToPic);
+        }
+        if (!rootDir.isDirectory()) {
+            throw new RuntimeException("Не получилось создать папку " + pathToPic);
+        }
+        if (!rootDir.canWrite() || !rootDir.canRead()) {
+            throw new RuntimeException("Нет доступа к папке " + pathToPic);
+        }
 
         System.out.println("init");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-
-        User user = null;
-        if (request.getRequestURI().equals("/profile")) {
-            user = (User) request.getSession().getAttribute("user");
-        } else {
-            Long id = Long.parseLong(request.getRequestURI().substring("/profile/".length()));
-            user = dao.getUserById(id);
-        }
-
-        try (PrintWriter writer = response.getWriter()) {
-            writer.println("<!DOCTYPE html><html>");
-            writer.println("<head>");
-            writer.println("<meta charset=\"UTF-8\" />");
-            writer.println("<title>Profile</title>");
-            writer.println("</head>");
-            writer.println("<body>");
-
-            writer.println("<h1>Profile</h1>");
-            writer.println("<h2>firstname " + user.getFirstName() + ".</h2>");
-            writer.println("<h2>lastname " + user.getLastName()  + ".</h2>");
-            writer.println("<h2>phone number " + user.getPhoneNumber() + ".</h2>");
-            writer.println("<a href=\"/\">exit</a>");
-            writer.println("</body>");
-            writer.println("</html>");
-        }
+        User user = (User) request.getSession().getAttribute("user");
+        File dir = rootDir.toPath().resolve(user.getPhoneNumber()).toFile();
+        dir.mkdir();
+        request.getSession().setAttribute("pathImages", dir);
+        request.getRequestDispatcher("/WEB-INF/jsp/profile.jsp").forward(request, response);
 
         System.out.println("get");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/jsp");
+
+        File pathToPic =  (File)req.getSession().getAttribute("pathImages");
+        String filePath = pathToPic.toPath().resolve(req.getPart("file").getSubmittedFileName()).toFile().getAbsolutePath();
+
+        try{
+            for (Part part : req.getParts()) {
+                part.write(filePath);
+            }
+        } catch (Exception ignored){}
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/profile.jsp");
+        dispatcher.forward(req, resp);
     }
 }

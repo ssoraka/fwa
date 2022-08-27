@@ -1,13 +1,17 @@
 package edu.school.cinema.config;
 
+import edu.school.cinema.repositories.AuthenticationDao;
+import edu.school.cinema.repositories.AuthenticationDaoImpl;
 import edu.school.cinema.repositories.UserDao;
 import edu.school.cinema.repositories.UserDaoImpl;
+import edu.school.cinema.services.UserService;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -30,12 +34,29 @@ public class ApplicationContextConfig {
     private String url;
     @Value("${datasource.usrname}")
     private String userName;
-    @Value("${datasoruce.password}")
+    @Value("${datasource.password}")
     private String password;
+    @Value("${storage.path}")
+    private String pathToPic;
 
     @Bean
     public UserDao userDao() {
-        return new UserDaoImpl(dataSource());
+        return new UserDaoImpl(jdbcTemplate());
+    }
+
+    @Bean
+    public AuthenticationDao authenticationDao() {
+        return new AuthenticationDaoImpl(jdbcTemplate());
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(dataSource());
+    }
+
+    @Bean
+    public UserService userService() {
+        return new UserService(userDao(), authenticationDao(), passwordEncoder());
     }
 
     @Bean
@@ -43,6 +64,7 @@ public class ApplicationContextConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(url);
@@ -84,4 +106,8 @@ public class ApplicationContextConfig {
         return new HibernateTransactionManager(sessionFactory());
     }
 
+    @Bean
+    public String pathToPic() {
+        return pathToPic;
+    }
 }

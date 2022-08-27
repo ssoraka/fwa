@@ -21,6 +21,9 @@ public class Authentication {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
+    @Column(name = "session")
+    private String session;
+
     public Long getId() {
         return id;
     }
@@ -51,5 +54,13 @@ public class Authentication {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
     }
 }

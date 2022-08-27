@@ -1,6 +1,7 @@
 package edu.school.cinema.listeners;
 
 import edu.school.cinema.config.ApplicationContextConfig;
+import edu.school.cinema.repositories.AuthenticationDao;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.ServletContext;
@@ -20,16 +21,10 @@ public class AppContextListener implements ServletContextListener {
         ctx.refresh();
         servletContext.setAttribute("springContext", ctx);
 
+        AuthenticationDao dao = ctx.getBean(AuthenticationDao.class);
+        sce.getServletContext().addListener(new MySessionListener(dao));
+
         System.out.println("contextInitialized");
-
-
-
-
-//        ServletRegistration.Dynamic appServlet =
-//                servletContext.addServlet("mvc", new DispatcherServlet(new GenericWebApplicationContext()));
-//        appServlet.setLoadOnStartup(1);
-//        appServlet.addMapping("/");
-
     }
 
     @Override

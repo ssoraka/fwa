@@ -1,9 +1,8 @@
 package edu.school.cinema.servlets;
 
 import edu.school.cinema.models.User;
-import edu.school.cinema.repositories.UserDao;
+import edu.school.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,22 +10,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 
 @WebServlet(value = "/signIn", name = "SignIn", description = "Sing In")
 public class SignInServlet extends HttpServlet {
 
-    UserDao dao;
-    PasswordEncoder encoder;
-
+    private UserService userService;
     @Override
     public void init() throws ServletException {
         super.init();
 
         ServletContext servletContext = getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
-        dao = springContext.getBean(UserDao.class);
-        encoder = springContext.getBean(PasswordEncoder.class);
+        userService = springContext.getBean(UserService.class);
 
         System.out.println("init");
     }
@@ -44,9 +41,11 @@ public class SignInServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-            User user = dao.getUserByPhoneNumber(phoneNumber);
-            if (encoder.matches(password, user.getPassword())) {
+            User user = userService.getUserByPhoneNumber(phoneNumber);
+            if (userService.isValidPassword(user, password)) {
+                userService.authenticateUser(user, request.getRemoteAddr(), request.getSession().getId());
                 request.getSession().setAttribute("user", user);
+                request.getSession().setAttribute("userService", userService);
                 response.sendRedirect("/profile");
             } else {
                 response.sendRedirect("/");

@@ -1,9 +1,8 @@
 package edu.school.cinema.servlets;
 
-import edu.school.cinema.models.User;
-import edu.school.cinema.repositories.UserDao;
+import edu.school.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.dao.DuplicateKeyException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,14 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Objects;
 
 @WebServlet(value = "/signUp", name = "SignUp", description = "Sing Up")
 public class SignUpServlet extends HttpServlet {
 
-    UserDao dao;
-    PasswordEncoder encoder;
+    private UserService userService;
 
     @Override
     public void init() throws ServletException {
@@ -27,8 +23,7 @@ public class SignUpServlet extends HttpServlet {
 
         ServletContext servletContext = getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
-        dao = springContext.getBean(UserDao.class);
-        encoder = springContext.getBean(PasswordEncoder.class);
+        userService = springContext.getBean(UserService.class);
 
         System.out.println("init");
     }
@@ -42,15 +37,15 @@ public class SignUpServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = new User();
-        user.setFirstName(request.getParameter("firstName"));
-        user.setLastName(request.getParameter("lastName"));
-        user.setPhoneNumber(request.getParameter("phoneNumber"));
-        user.setPassword(encoder.encode(request.getParameter("password")));
-
         try {
-            dao.createUser(user);
+            userService.createUser(request.getParameter("firstName"),
+                    request.getParameter("lastName"),
+                    request.getParameter("phoneNumber"),
+                    request.getParameter("password"));
             response.sendRedirect("/");
+        } catch (DuplicateKeyException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

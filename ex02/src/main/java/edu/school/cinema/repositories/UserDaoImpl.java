@@ -20,27 +20,32 @@ public class UserDaoImpl implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private RowMapper<User> mapper = new UserMapper();
 
-    public UserDaoImpl(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public UserDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public User getUserById(Long id) {
-        return jdbcTemplate.queryForObject(SQL_FIND_PERSON, new Object[] { id }, new UserMapper());
+        return jdbcTemplate.queryForObject(SQL_FIND_PERSON, new Object[] { id }, mapper);
     }
 
+    @Override
     public List<User> getAllUsers() {
-        return jdbcTemplate.query(SQL_GET_ALL, new UserMapper());
+        return jdbcTemplate.query(SQL_GET_ALL, mapper);
     }
 
+    @Override
     public boolean deleteUser(User person) {
         return jdbcTemplate.update(SQL_DELETE_PERSON, person.getId()) > 0;
     }
 
+    @Override
     public boolean updateUser(User person) {
         return jdbcTemplate.update(SQL_UPDATE_PERSON, person.getFirstName(), person.getLastName(), person.getPhoneNumber(),
                 person.getId()) > 0;
     }
 
+    @Override
     public User createUser(User person) {
         Long id = jdbcTemplate.queryForObject(SQL_INSERT_PERSON, Long.class, person.getFirstName(), person.getLastName(), person.getPhoneNumber(), person.getPassword());
         person.setId(id);
@@ -52,4 +57,5 @@ public class UserDaoImpl implements UserDao {
         Object[] args = new Object[]{phoneNumber};
         return jdbcTemplate.query(SQL_FIND_BY_PHONENUMBER, args, mapper).get(0);
     }
+
 }

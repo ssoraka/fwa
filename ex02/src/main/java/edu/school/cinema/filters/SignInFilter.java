@@ -1,6 +1,8 @@
 package edu.school.cinema.filters;
 
+import edu.school.cinema.models.User;
 import edu.school.cinema.repositories.UserDao;
+import edu.school.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,8 +14,7 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = {"/signIn"})
 public class SignInFilter implements Filter {
-    PasswordEncoder encoder;
-    UserDao dao;
+    private UserService userService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -21,8 +22,7 @@ public class SignInFilter implements Filter {
 
         ServletContext servletContext = filterConfig.getServletContext();
         ApplicationContext springContext = (ApplicationContext) servletContext.getAttribute("springContext");
-        encoder = springContext.getBean(PasswordEncoder.class);
-        dao = springContext.getBean(UserDao.class);
+        userService = springContext.getBean(UserService.class);
     }
 
     @Override
