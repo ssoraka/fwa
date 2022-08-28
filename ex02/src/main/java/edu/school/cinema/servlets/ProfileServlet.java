@@ -1,7 +1,6 @@
 package edu.school.cinema.servlets;
 
 import edu.school.cinema.models.User;
-import edu.school.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletContext;
