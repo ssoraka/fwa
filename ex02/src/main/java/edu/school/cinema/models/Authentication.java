@@ -1,27 +1,17 @@
 package edu.school.cinema.models;
 
-import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
-@Entity(name="Authentication")
-@Table(name="authentications")
 public class Authentication {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date")
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private Timestamp date;
 
-    @Column(name = "ip")
     private String ip;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", nullable=false)
     private User user;
 
-    @Column(name = "session")
     private String session;
 
     public Long getId() {
@@ -32,11 +22,11 @@ public class Authentication {
         this.id = id;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

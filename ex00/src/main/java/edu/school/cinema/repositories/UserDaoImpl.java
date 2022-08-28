@@ -20,8 +20,8 @@ public class UserDaoImpl implements UserDao {
     private JdbcTemplate jdbcTemplate;
     private RowMapper<User> mapper = new UserMapper();
 
-    public UserDaoImpl(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public UserDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public User getUserById(Long id) {

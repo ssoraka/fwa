@@ -36,7 +36,7 @@
 
     <% for (Authentication auth : user.getAuthentications()) {%>
     <tr>
-        <td><%=auth.getDate()%>
+        <td><%=String.format("%s", auth.getDate())%>
         </td>
         <td><%=auth.getIp()%>
         </td>

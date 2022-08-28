@@ -8,7 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,6 +47,20 @@ public class ApplicationContextConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public JdbcTemplate jdbcTemplate() {
+        Resource resource = new ClassPathResource("sql/schema.sql");
+        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
+        databasePopulator.execute(dataSource());
+
+        resource = new ClassPathResource("sql/data.sql");
+        databasePopulator = new ResourceDatabasePopulator(resource);
+        databasePopulator.execute(dataSource());
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource());
+        return jdbcTemplate;
+    }
+
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(url);
@@ -51,37 +69,4 @@ public class ApplicationContextConfig {
         dataSource.setDriverClassName(driverClassName);
         return dataSource;
     }
-
-    private Properties hibernateProperties() {
-        Properties hibernateProp = new Properties();
-        hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
-        hibernateProp.put("hibernate.format_sql", true);
-        hibernateProp.put("hibernate.use_sql_comments", true);
-        hibernateProp.put("hibernate.show_sql", true);
-        hibernateProp.put("hibernate.max_fetch_depth", 3);
-        hibernateProp.put("hibernate.jdbc.batch_size", 10);
-        hibernateProp.put("hibernate.jdbc.fetch_size", 50);
-
-        hibernateProp.put("hibernate.connection.CharSet", "utf8");
-        hibernateProp.put("hibernate.connection.characterEncoding", "utf8");
-        hibernateProp.put("hibernate.connection.useUnicode", true);
-
-        hibernateProp.put("hibernate.hbm2ddl.auto", "create-drop");
-        return hibernateProp;
-    }
-
-    public SessionFactory sessionFactory() throws IOException {
-        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-        sessionFactoryBean.setDataSource(dataSource());
-        sessionFactoryBean.setPackagesToScan("edu.school.cinema.models");
-        sessionFactoryBean.setHibernateProperties(hibernateProperties());
-        sessionFactoryBean.afterPropertiesSet();
-        return sessionFactoryBean.getObject();
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager() throws IOException {
-        return new HibernateTransactionManager(sessionFactory());
-    }
-
 }

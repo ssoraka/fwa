@@ -6,7 +6,9 @@ import edu.school.cinema.repositories.AuthenticationDao;
 import edu.school.cinema.repositories.UserDao;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class UserService {
     UserDao userDao;
@@ -42,7 +44,7 @@ public class UserService {
             ip = "localhost";
         }
         Authentication auth = new Authentication();
-        auth.setDate(new Date());
+        auth.setDate(Timestamp.valueOf(LocalDateTime.now()));
         auth.setUser(user);
         auth.setIp(ip);
         auth.setSession(sessionId);
