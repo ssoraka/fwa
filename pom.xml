@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>webProject</artifactId>
+    <artifactId>fwa</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>ex00</module>
         <module>ex01</module>
         <module>ex02</module>
     </modules>
-    <name>webProject</name>
+    <name>fwa</name>
     <packaging>pom</packaging>
 
     <properties>
